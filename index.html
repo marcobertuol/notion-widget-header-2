@@ -10,6 +10,7 @@
       --bg: rgba(15, 15, 20, 0.96);
       --bg-soft: rgba(30, 30, 40, 0.96);
       --accent: #18a999;
+      --accent-soft: #ff6565;
       --text-main: #f5f5f5;
       --text-muted: #b5b5c5;
       --border: rgba(255, 255, 255, 0.08);
@@ -22,6 +23,7 @@
         --bg: #ffffff;
         --bg-soft: #f4f4f8;
         --accent: #2e8cff;
+        --accent-soft: #ff6565;
         --text-main: #222222;
         --text-muted: #666a7a;
         --border: rgba(0, 0, 0, 0.08);
@@ -174,9 +176,26 @@
       z-index: -1;
     }
 
-    .calendar-grid div.other-month {
-      color: var(--text-muted);
-      opacity: 0.5;
+    /* Estilo para feriados */
+    .calendar-grid div.holiday {
+      font-weight: 600;
+    }
+
+    .calendar-grid div.holiday::after {
+      content: "";
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Se hoje também for feriado, deixa o círculo mais forte */
+    .calendar-grid div.today.holiday::after {
+      background: #ffffff;
     }
 
     .bottom-row {
@@ -277,6 +296,18 @@
       "dezembro"
     ];
 
+    // Feriados nacionais fixos do Brasil (meses em 0-11)
+    const holidays = [
+      { month: 0, day: 1, name: "Confraternização Universal" },       // 01/01
+      { month: 3, day: 21, name: "Tiradentes" },                      // 21/04
+      { month: 4, day: 1, name: "Dia do Trabalho" },                  // 01/05
+      { month: 8, day: 7, name: "Independência do Brasil" },          // 07/09
+      { month: 9, day: 12, name: "Nossa Senhora Aparecida" },         // 12/10
+      { month: 10, day: 2, name: "Finados" },                         // 02/11
+      { month: 10, day: 15, name: "Proclamação da República" },       // 15/11
+      { month: 11, day: 25, name: "Natal" }                           // 25/12
+    ];
+
     const timeEl = document.getElementById("time");
     const secondsEl = document.getElementById("seconds");
     const dateTextEl = document.getElementById("date-text");
@@ -289,6 +320,12 @@
 
     function pad(num) {
       return num.toString().padStart(2, "0");
+    }
+
+    function getHolidayFor(date) {
+      const m = date.getMonth();
+      const d = date.getDate();
+      return holidays.find((h) => h.month === m && h.day === d) || null;
     }
 
     function updateClock() {
@@ -309,9 +346,16 @@
       dateTextEl.textContent = `${weekdayName}, ${pad(day)} de ${monthName} de ${year}`;
       weekdayPillEl.textContent = weekdayName.toUpperCase();
 
-      todayLabelEl.textContent = `Hoje: ${pad(day)}/${pad(
-        now.getMonth() + 1
-      )}/${year}`;
+      const todayHoliday = getHolidayFor(now);
+      if (todayHoliday) {
+        todayLabelEl.textContent = `Hoje: ${pad(day)}/${pad(
+          now.getMonth() + 1
+        )}/${year} – ${todayHoliday.name}`;
+      } else {
+        todayLabelEl.textContent = `Hoje: ${pad(day)}/${pad(
+          now.getMonth() + 1
+        )}/${year}`;
+      }
     }
 
     function buildWeekdayHeader() {
@@ -336,7 +380,6 @@
       const daysInMonth = lastDay.getDate();
 
       // índice da coluna considerando semana começando na segunda
-      // new Date().getDay() -> 0=domingo...6=sábado
       const firstWeekday = firstDay.getDay(); // 0-6 (domingo-sábado)
       const offset = (firstWeekday - 1 + 7) % 7; // 0=segunda, 6=domingo
 
@@ -355,8 +398,18 @@
         const cell = document.createElement("div");
         cell.textContent = day;
 
+        // Hoje
         if (isCurrentMonth && day === today.getDate()) {
           cell.classList.add("today");
+        }
+
+        // Marca feriados fixos
+        const holiday = holidays.find(
+          (h) => h.month === month && h.day === day
+        );
+        if (holiday) {
+          cell.classList.add("holiday");
+          cell.title = holiday.name; // tooltip com o nome do feriado
         }
 
         calendarGridEl.appendChild(cell);
