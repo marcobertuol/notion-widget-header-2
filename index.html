@@ -43,7 +43,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent; /* deixa o fundo neutro para o Notion */
+      background: transparent;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
     }
@@ -193,7 +193,6 @@
       transform: translateX(-50%);
     }
 
-    /* Se hoje também for feriado, deixa o círculo mais forte */
     .calendar-grid div.today.holiday::after {
       background: #ffffff;
     }
@@ -238,15 +237,17 @@
   </style>
 </head>
 <body>
+
   <div class="widget" id="clock-widget">
     <div class="top-row">
       <div class="time-block">
         <div>
-          <span class="time" id="time">--:--</span
-          ><span class="seconds" id="seconds">--</span>
+          <span class="time" id="time">--:--</span>
+          <span class="seconds" id="seconds">--</span>
         </div>
         <div class="date-text" id="date-text">Carregando...</div>
       </div>
+
       <div class="pill" id="weekday-pill">HOJE</div>
     </div>
 
@@ -255,6 +256,7 @@
         <span class="month-year" id="month-year">Mês Ano</span>
         <span class="today-label" id="today-label"></span>
       </div>
+
       <div class="calendar-weekdays" id="calendar-weekdays"></div>
       <div class="calendar-grid" id="calendar-grid"></div>
     </div>
@@ -270,42 +272,29 @@
 
   <script>
     const weekdayNames = [
-      "domingo",
-      "segunda",
-      "terça",
-      "quarta",
-      "quinta",
-      "sexta",
-      "sábado"
+      "domingo", "segunda", "terça", "quarta",
+      "quinta", "sexta", "sábado"
     ];
 
-    const weekdayShort = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"]; // semana começando na segunda
+    const weekdayShort = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
 
     const monthNames = [
-      "janeiro",
-      "fevereiro",
-      "março",
-      "abril",
-      "maio",
-      "junho",
-      "julho",
-      "agosto",
-      "setembro",
-      "outubro",
-      "novembro",
-      "dezembro"
+      "janeiro", "fevereiro", "março", "abril",
+      "maio", "junho", "julho", "agosto",
+      "setembro", "outubro", "novembro", "dezembro"
     ];
 
-    // Feriados nacionais fixos do Brasil (meses em 0-11)
+    /* Feriados fixos (meses em 0-11) */
     const holidays = [
-      { month: 0, day: 1, name: "Confraternização Universal" },       // 01/01
-      { month: 3, day: 21, name: "Tiradentes" },                      // 21/04
-      { month: 4, day: 1, name: "Dia do Trabalho" },                  // 01/05
-      { month: 8, day: 7, name: "Independência do Brasil" },          // 07/09
-      { month: 9, day: 12, name: "Nossa Senhora Aparecida" },         // 12/10
-      { month: 10, day: 2, name: "Finados" },                         // 02/11
-      { month: 10, day: 15, name: "Proclamação da República" },       // 15/11
-      { month: 11, day: 25, name: "Natal" }                           // 25/12
+      { month: 0,  day: 1,  name: "Confraternização Universal" },   // 01/01
+      { month: 3,  day: 21, name: "Tiradentes" },                    // 21/04
+      { month: 4,  day: 1,  name: "Dia do Trabalho" },               // 01/05
+      { month: 8,  day: 7,  name: "Independência do Brasil" },       // 07/09
+      { month: 9,  day: 12, name: "Nossa Senhora Aparecida" },       // 12/10
+      { month: 10, day: 2,  name: "Finados" },                       // 02/11
+      { month: 10, day: 15, name: "Proclamação da República" },      // 15/11
+      { month: 10, day: 20, name: "Consciência Negra" },             // 20/11
+      { month: 11, day: 25, name: "Natal" }                          // 25/12
     ];
 
     const timeEl = document.getElementById("time");
@@ -318,52 +307,50 @@
     const calendarGridEl = document.getElementById("calendar-grid");
     const tzLabelEl = document.getElementById("tz-label");
 
-    function pad(num) {
-      return num.toString().padStart(2, "0");
+    function pad(n) {
+      return n.toString().padStart(2, "0");
     }
 
-    function getHolidayFor(date) {
-      const m = date.getMonth();
-      const d = date.getDate();
-      return holidays.find((h) => h.month === m && h.day === d) || null;
+    function getHoliday(date) {
+      return holidays.find(h =>
+        h.month === date.getMonth() && h.day === date.getDate()
+      );
     }
 
     function updateClock() {
       const now = new Date();
 
       const hours = pad(now.getHours());
-      const minutes = pad(now.getMinutes());
-      const seconds = pad(now.getSeconds());
+      const mins = pad(now.getMinutes());
+      const secs = pad(now.getSeconds());
 
-      timeEl.textContent = `${hours}:${minutes}`;
-      secondsEl.textContent = seconds;
+      timeEl.textContent = `${hours}:${mins}`;
+      secondsEl.textContent = secs;
 
-      const weekdayName = weekdayNames[now.getDay()];
+      const weekday = weekdayNames[now.getDay()];
       const day = now.getDate();
-      const monthName = monthNames[now.getMonth()];
+      const month = monthNames[now.getMonth()];
       const year = now.getFullYear();
 
-      dateTextEl.textContent = `${weekdayName}, ${pad(day)} de ${monthName} de ${year}`;
-      weekdayPillEl.textContent = weekdayName.toUpperCase();
+      dateTextEl.textContent = `${weekday}, ${pad(day)} de ${month} de ${year}`;
+      weekdayPillEl.textContent = weekday.toUpperCase();
 
-      const todayHoliday = getHolidayFor(now);
-      if (todayHoliday) {
-        todayLabelEl.textContent = `Hoje: ${pad(day)}/${pad(
-          now.getMonth() + 1
-        )}/${year} – ${todayHoliday.name}`;
+      const holiday = getHoliday(now);
+      if (holiday) {
+        todayLabelEl.textContent =
+          `Hoje: ${pad(day)}/${pad(now.getMonth()+1)}/${year} – ${holiday.name}`;
       } else {
-        todayLabelEl.textContent = `Hoje: ${pad(day)}/${pad(
-          now.getMonth() + 1
-        )}/${year}`;
+        todayLabelEl.textContent =
+          `Hoje: ${pad(day)}/${pad(now.getMonth()+1)}/${year}`;
       }
     }
 
-    function buildWeekdayHeader() {
+    function buildWeekdays() {
       calendarWeekdaysEl.innerHTML = "";
-      weekdayShort.forEach((name) => {
-        const div = document.createElement("div");
-        div.textContent = name.toUpperCase();
-        calendarWeekdaysEl.appendChild(div);
+      weekdayShort.forEach(w => {
+        const d = document.createElement("div");
+        d.textContent = w.toUpperCase();
+        calendarWeekdaysEl.appendChild(d);
       });
     }
 
@@ -371,70 +358,65 @@
       calendarGridEl.innerHTML = "";
 
       const year = now.getFullYear();
-      const month = now.getMonth(); // 0-11
+      const month = now.getMonth();
 
       monthYearEl.textContent = `${monthNames[month]} ${year}`;
 
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
-      const daysInMonth = lastDay.getDate();
+      const totalDays = lastDay.getDate();
 
-      // índice da coluna considerando semana começando na segunda
-      const firstWeekday = firstDay.getDay(); // 0-6 (domingo-sábado)
-      const offset = (firstWeekday - 1 + 7) % 7; // 0=segunda, 6=domingo
+      const firstWeekday = (firstDay.getDay() - 1 + 7) % 7;
 
-      // espaços em branco antes do dia 1
-      for (let i = 0; i < offset; i++) {
-        const emptyCell = document.createElement("div");
-        emptyCell.classList.add("empty");
-        calendarGridEl.appendChild(emptyCell);
+      for (let i = 0; i < firstWeekday; i++) {
+        const div = document.createElement("div");
+        div.className = "empty";
+        calendarGridEl.appendChild(div);
       }
 
       const today = new Date();
-      const isCurrentMonth =
-        today.getFullYear() === year && today.getMonth() === month;
 
-      for (let day = 1; day <= daysInMonth; day++) {
+      for (let d = 1; d <= totalDays; d++) {
         const cell = document.createElement("div");
-        cell.textContent = day;
+        cell.textContent = d;
 
-        // Hoje
-        if (isCurrentMonth && day === today.getDate()) {
+        if (
+          today.getFullYear() === year &&
+          today.getMonth() === month &&
+          today.getDate() === d
+        ) {
           cell.classList.add("today");
         }
 
-        // Marca feriados fixos
-        const holiday = holidays.find(
-          (h) => h.month === month && h.day === day
-        );
+        const holiday = holidays.find(h => h.day === d && h.month === month);
         if (holiday) {
           cell.classList.add("holiday");
-          cell.title = holiday.name; // tooltip com o nome do feriado
+          cell.title = holiday.name;
         }
 
         calendarGridEl.appendChild(cell);
       }
     }
 
-    function setTimezoneLabel() {
+    function initTZ() {
       try {
-        const tz =
-          Intl.DateTimeFormat().resolvedOptions().timeZone || "Horário local";
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
         tzLabelEl.textContent = tz.replace("_", " ");
-      } catch (e) {
+      } catch {
         tzLabelEl.textContent = "Horário local";
       }
     }
 
     function init() {
-      buildWeekdayHeader();
+      buildWeekdays();
       buildCalendar();
-      setTimezoneLabel();
       updateClock();
+      initTZ();
       setInterval(updateClock, 1000);
     }
 
     document.addEventListener("DOMContentLoaded", init);
   </script>
+
 </body>
 </html>
