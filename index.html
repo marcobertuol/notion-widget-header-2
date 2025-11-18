@@ -2,33 +2,16 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Relógio & Calendário</title>
+  <title>Relógio e Calendário</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
     :root {
-      --bg: rgba(15, 15, 20, 0.96);
-      --bg-soft: rgba(30, 30, 40, 0.96);
-      --accent: #18a999;
-      --accent-soft: #ff6565;
-      --text-main: #f5f5f5;
-      --text-muted: #b5b5c5;
-      --border: rgba(255, 255, 255, 0.08);
-      --shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
-      --radius: 18px;
-    }
-
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #ffffff;
-        --bg-soft: #f4f4f8;
-        --accent: #2e8cff;
-        --accent-soft: #ff6565;
-        --text-main: #222222;
-        --text-muted: #666a7a;
-        --border: rgba(0, 0, 0, 0.08);
-        --shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
-      }
+      --green: #4a7b54;
+      --green-soft: #c9e2cf;
+      --text-main: #333333;
+      --text-muted: #8a8a8a;
+      --bg: transparent;
     }
 
     * {
@@ -38,385 +21,196 @@
     }
 
     body {
-      margin: 0;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent;
+      background: var(--bg);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
+      color: var(--text-main);
     }
 
     .widget {
-      min-width: 320px;
-      max-width: 420px;
-      background: var(--bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 16px 18px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .time-block {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .time {
-      font-size: 2.3rem;
-      line-height: 1;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: var(--text-main);
-    }
-
-    .seconds {
-      font-size: 0.9rem;
-      margin-left: 4px;
-      opacity: 0.8;
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .date-text {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .pill {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, var(--accent), #52d6c2);
-      color: white;
-      padding: 4px 9px;
-      border-radius: 999px;
-      letter-spacing: 0.13em;
-      font-weight: 600;
-      align-self: flex-start;
-    }
-
-    .calendar-card {
-      background: var(--bg-soft);
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 10px 10px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      color: var(--text-main);
-      font-weight: 500;
-    }
-
-    .calendar-header span.month-year {
-      text-transform: capitalize;
-    }
-
-    .calendar-weekdays,
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      width: 260px;
       text-align: center;
     }
 
-    .calendar-weekdays div {
-      font-size: 0.65rem;
+    /* Relógio */
+
+    .time {
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--green);
+    }
+
+    .seconds {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
+      color: var(--green);
+    }
+
+    .weekday {
+      margin-top: 16px;
       font-weight: 600;
+      font-size: 1rem;
     }
 
-    .calendar-grid div {
-      font-size: 0.75rem;
-      padding: 4px 0;
+    .date {
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .divider {
+      margin: 16px auto 12px;
+      width: 80px;
+      height: 3px;
       border-radius: 999px;
-      color: var(--text-main);
-      position: relative;
+      background: var(--green-soft);
     }
 
-    .calendar-grid div.empty {
-      opacity: 0;
+    /* Calendário */
+
+    .calendar {
+      width: 100%;
+      margin-top: 4px;
+      font-size: 0.8rem;
+    }
+
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .calendar-header div {
+      text-transform: uppercase;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      row-gap: 6px;
+    }
+
+    .calendar-day {
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      color: var(--text-main);
+    }
+
+    .calendar-day.empty {
+      color: transparent;
       pointer-events: none;
     }
 
-    .calendar-grid div.today {
+    .calendar-day.today {
+      background: var(--green);
       color: #ffffff;
       font-weight: 600;
-    }
-
-    .calendar-grid div.today::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: radial-gradient(circle at 50% 20%, #ffffff55, transparent 60%),
-        linear-gradient(135deg, var(--accent), #52d6c2);
-      z-index: -1;
-    }
-
-    /* Estilo para feriados */
-    .calendar-grid div.holiday {
-      font-weight: 600;
-    }
-
-    .calendar-grid div.holiday::after {
-      content: "";
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-      bottom: 2px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .calendar-grid div.today.holiday::after {
-      background: #ffffff;
-    }
-
-    .bottom-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 2px;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-right: 6px;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tz {
-      opacity: 0.8;
-    }
-
-    @media (max-width: 380px) {
-      .widget {
-        min-width: 0;
-        width: 100%;
-        margin: 8px;
-      }
-      .time {
-        font-size: 2rem;
-      }
     }
   </style>
 </head>
 <body>
+  <div class="widget">
+    <div class="time" id="time">--:--</div>
+    <div class="seconds" id="seconds">-- S</div>
 
-  <div class="widget" id="clock-widget">
-    <div class="top-row">
-      <div class="time-block">
-        <div>
-          <span class="time" id="time">--:--</span>
-          <span class="seconds" id="seconds">--</span>
-        </div>
-        <div class="date-text" id="date-text">Carregando...</div>
-      </div>
+    <div class="weekday" id="weekday">---</div>
+    <div class="date" id="date">Carregando...</div>
 
-      <div class="pill" id="weekday-pill">HOJE</div>
-    </div>
+    <div class="divider"></div>
 
-    <div class="calendar-card">
-      <div class="calendar-header">
-        <span class="month-year" id="month-year">Mês Ano</span>
-        <span class="today-label" id="today-label"></span>
-      </div>
-
-      <div class="calendar-weekdays" id="calendar-weekdays"></div>
+    <div class="calendar">
+      <div class="calendar-header" id="calendar-header"></div>
       <div class="calendar-grid" id="calendar-grid"></div>
-    </div>
-
-    <div class="bottom-row">
-      <div class="status">
-        <span class="dot"></span>
-        <span>Atualizado em tempo real</span>
-      </div>
-      <div class="tz" id="tz-label"></div>
     </div>
   </div>
 
   <script>
-    const weekdayNames = [
-      "domingo", "segunda", "terça", "quarta",
-      "quinta", "sexta", "sábado"
-    ];
-
-    const weekdayShort = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
-
-    const monthNames = [
-      "janeiro", "fevereiro", "março", "abril",
-      "maio", "junho", "julho", "agosto",
-      "setembro", "outubro", "novembro", "dezembro"
-    ];
-
-    /* Feriados fixos (meses em 0-11) */
-    const holidays = [
-      { month: 0,  day: 1,  name: "Confraternização Universal" },   // 01/01
-      { month: 3,  day: 21, name: "Tiradentes" },                    // 21/04
-      { month: 4,  day: 1,  name: "Dia do Trabalho" },               // 01/05
-      { month: 8,  day: 7,  name: "Independência do Brasil" },       // 07/09
-      { month: 9,  day: 12, name: "Nossa Senhora Aparecida" },       // 12/10
-      { month: 10, day: 2,  name: "Finados" },                       // 02/11
-      { month: 10, day: 15, name: "Proclamação da República" },      // 15/11
-      { month: 10, day: 20, name: "Consciência Negra" },             // 20/11
-      { month: 11, day: 25, name: "Natal" }                          // 25/12
-    ];
-
     const timeEl = document.getElementById("time");
     const secondsEl = document.getElementById("seconds");
-    const dateTextEl = document.getElementById("date-text");
-    const weekdayPillEl = document.getElementById("weekday-pill");
-    const monthYearEl = document.getElementById("month-year");
-    const todayLabelEl = document.getElementById("today-label");
-    const calendarWeekdaysEl = document.getElementById("calendar-weekdays");
-    const calendarGridEl = document.getElementById("calendar-grid");
-    const tzLabelEl = document.getElementById("tz-label");
+    const weekdayEl = document.getElementById("weekday");
+    const dateEl = document.getElementById("date");
+    const calHeaderEl = document.getElementById("calendar-header");
+    const calGridEl = document.getElementById("calendar-grid");
+
+    const weekdayNames = [
+      "Domingo",
+      "Segunda-Feira",
+      "Terça-Feira",
+      "Quarta-Feira",
+      "Quinta-Feira",
+      "Sexta-Feira",
+      "Sábado"
+    ];
+
+    const monthNames = [
+      "janeiro",
+      "fevereiro",
+      "março",
+      "abril",
+      "maio",
+      "junho",
+      "julho",
+      "agosto",
+      "setembro",
+      "outubro",
+      "novembro",
+      "dezembro"
+    ];
+
+    const weekdayLetters = ["D", "S", "T", "Q", "Q", "S", "S"]; // cabeçalho
 
     function pad(n) {
       return n.toString().padStart(2, "0");
     }
 
-    function getHoliday(date) {
-      return holidays.find(h =>
-        h.month === date.getMonth() && h.day === date.getDate()
-      );
-    }
-
     function updateClock() {
       const now = new Date();
-
       const hours = pad(now.getHours());
       const mins = pad(now.getMinutes());
       const secs = pad(now.getSeconds());
 
       timeEl.textContent = `${hours}:${mins}`;
-      secondsEl.textContent = secs;
+      secondsEl.textContent = `${secs} S`;
 
-      const weekday = weekdayNames[now.getDay()];
+      const wd = weekdayNames[now.getDay()];
       const day = now.getDate();
       const month = monthNames[now.getMonth()];
       const year = now.getFullYear();
 
-      dateTextEl.textContent = `${weekday}, ${pad(day)} de ${month} de ${year}`;
-      weekdayPillEl.textContent = weekday.toUpperCase();
-
-      const holiday = getHoliday(now);
-      if (holiday) {
-        todayLabelEl.textContent =
-          `Hoje: ${pad(day)}/${pad(now.getMonth()+1)}/${year} – ${holiday.name}`;
-      } else {
-        todayLabelEl.textContent =
-          `Hoje: ${pad(day)}/${pad(now.getMonth()+1)}/${year}`;
-      }
+      weekdayEl.textContent = wd;
+      dateEl.textContent = `${day} de ${month} de ${year}`;
     }
 
-    function buildWeekdays() {
-      calendarWeekdaysEl.innerHTML = "";
-      weekdayShort.forEach(w => {
-        const d = document.createElement("div");
-        d.textContent = w.toUpperCase();
-        calendarWeekdaysEl.appendChild(d);
-      });
-    }
+    function buildCalendar(date = new Date()) {
+      calHeaderEl.innerHTML = "";
+      calGridEl.innerHTML = "";
 
-    function buildCalendar(now = new Date()) {
-      calendarGridEl.innerHTML = "";
-
-      const year = now.getFullYear();
-      const month = now.getMonth();
-
-      monthYearEl.textContent = `${monthNames[month]} ${year}`;
-
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      const totalDays = lastDay.getDate();
-
-      const firstWeekday = (firstDay.getDay() - 1 + 7) % 7;
-
-      for (let i = 0; i < firstWeekday; i++) {
+      // Cabeçalho com D S T Q Q S S
+      weekdayLetters.forEach((l) => {
         const div = document.createElement("div");
-        div.className = "empty";
-        calendarGridEl.appendChild(div);
-      }
+        div.textContent = l;
+        calHeaderEl.appendChild(div);
+      });
+
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const firstWeekday = firstDay.getDay(); // 0 = domingo
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
 
       const today = new Date();
-
-      for (let d = 1; d <= totalDays; d++) {
-        const cell = document.createElement("div");
-        cell.textContent = d;
-
-        if (
-          today.getFullYear() === year &&
-          today.getMonth() === month &&
-          today.getDate() === d
-        ) {
-          cell.classList.add("today");
-        }
-
-        const holiday = holidays.find(h => h.day === d && h.month === month);
-        if (holiday) {
-          cell.classList.add("holiday");
-          cell.title = holiday.name;
-        }
-
-        calendarGridEl.appendChild(cell);
-      }
-    }
-
-    function initTZ() {
-      try {
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        tzLabelEl.textContent = tz.replace("_", " ");
-      } catch {
-        tzLabelEl.textContent = "Horário local";
-      }
-    }
-
-    function init() {
-      buildWeekdays();
-      buildCalendar();
-      updateClock();
-      initTZ();
-      setInterval(updateClock, 1000);
-    }
-
-    document.addEventListener("DOMContentLoaded", init);
-  </script>
-
-</body>
-</html>
+      const isCurrentMonth =
+        today.getFullYear() === year && today.getMonth() === mon
